@@ -17,8 +17,14 @@ public class MorpionApp {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-         SwingUtilities.invokeLater(InterfaceMorpion::new);
-
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                // Assuming InterfaceMorpion constructor takes a String argument
+                int size = 5;
+                new InterfaceMorpion(size);
+            }
+        });
     }
     
 }

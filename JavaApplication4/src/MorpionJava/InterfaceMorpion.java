@@ -8,17 +8,17 @@ public class InterfaceMorpion extends JFrame {
     
     private Morpion morpion;
     private JButton[][] buttons;
-    private final JPanel panneau = new JPanel(new GridLayout(3, 3));
+    private final JPanel panneau;
 
-    public InterfaceMorpion() {
+    public InterfaceMorpion(int size) {
         super("Morpion");
         this.setBounds(100, 100, 250, 250);
+        panneau = new JPanel(new GridLayout(size, size));
+        buttons = new JButton[size][size];
+        morpion = new Morpion(size);
         
-        buttons = new JButton[3][3];
-        morpion = new Morpion();
-        
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 buttons[i][j] = new JButton();
                 buttons[i][j].setFont(new Font("Arial", Font.PLAIN, 40));
                 buttons[i][j].setFocusPainted(false);
@@ -39,8 +39,7 @@ public class InterfaceMorpion extends JFrame {
     
     
     private void onButtonClick(int row, int col) {
-                     System.out.println("test");
-
+        
         if (morpion.makeMove(row, col)) {
 
             updateUI();
@@ -70,7 +69,7 @@ public class InterfaceMorpion extends JFrame {
     }
 
     private void resetGame() {
-        morpion = new Morpion();
+        morpion = new Morpion(morpion.SIZE);
         updateUI();
     }
 

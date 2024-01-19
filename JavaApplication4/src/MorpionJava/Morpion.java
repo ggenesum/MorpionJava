@@ -11,9 +11,10 @@ package MorpionJava;
 public class Morpion {
     private char[][] board; // 2D array for the game board
     private char currentPlayer; // 'X' or 'O'
-    public static final int SIZE = 3; // Assuming a 3x3 board
+    public static int SIZE = 3; // Assuming a 3x3 board
 
-    public Morpion() {
+    public Morpion(int size) {
+        SIZE = size;
         board = new char[SIZE][SIZE];
         currentPlayer = 'X'; // X starts by default
         initializeBoard();
@@ -41,43 +42,42 @@ public class Morpion {
     }
 
     public int whoFinished() {
-      // -1: game continues, 1: player 1 ('X') won, 2: player 2 ('O') won, 3: draw
+    // Check rows and columns
+    for (int i = 0; i < SIZE; i++) {
+        if (checkLine(board[i][0], i, 0, 0, 1) || checkLine(board[0][i], 0, i, 1, 0)) {
+            char winner = board[i][0] != ' ' ? board[i][0] : board[0][i];
+            return winner == 'X' ? 1 : 2;
+        }
+    }
 
-      // Check rows
-      for (int r = 0; r < SIZE; r++) {
-          if (board[r][0] != ' ' && checkRowCol(board[r][0], board[r][1], board[r][2])) {
-              return board[r][0] == 'X' ? 1 : 2;
-          }
-      }
+    // Check diagonals
+    if (checkLine(board[0][0], 0, 0, 1, 1) || checkLine(board[0][SIZE - 1], 0, SIZE - 1, 1, -1)) {
+        char winner = board[0][0] != ' ' ? board[0][0] : board[0][SIZE - 1];
+        return winner == 'X' ? 1 : 2;
+    }
 
-      // Check columns
-      for (int c = 0; c < SIZE; c++) {
-          if (board[0][c] != ' ' && checkRowCol(board[0][c], board[1][c], board[2][c])) {
-              return board[0][c] == 'X' ? 1 : 2;
-          }
-      }
+    // Check for draw
+    if (isBoardFull()) {
+        return 3;
+    }
 
-      // Check diagonals
-      if (board[0][0] != ' ' && checkRowCol(board[0][0], board[1][1], board[2][2])) {
-          return board[0][0] == 'X' ? 1 : 2;
-      }
-      if (board[0][2] != ' ' && checkRowCol(board[0][2], board[1][1], board[2][0])) {
-          return board[0][2] == 'X' ? 1 : 2;
-      }
+    // Game continues
+    return -1;
+    }
 
-      // Check for draw
-      if (isBoardFull()) {
-          return 3;
-      }
+    // Helper method to check if a line (row, column, or diagonal) is all the same symbol
+    private boolean checkLine(char symbol, int startRow, int startCol, int rowInc, int colInc) {
+        if (symbol == ' ') {
+            return false;
+        }
+        for (int i = 0; i < SIZE; i++) {
+            if (board[startRow + i * rowInc][startCol + i * colInc] != symbol) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-      // Game continues
-      return -1;
-  }
-
-  // Helper method to check if three cells are the same
-  private boolean checkRowCol(char c1, char c2, char c3) {
-      return ((c1 != ' ') && (c1 == c2) && (c2 == c3));
-  }
 
 
     // Checks if the board is full
