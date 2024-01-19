@@ -1,17 +1,18 @@
+package MorpionJava;
 
 import java.awt.*;
 import javax.swing.*;
 
 public class InterfaceMorpion extends JFrame {
     
-    private final JPanel panneau = new JPanel();
     
     private Morpion morpion;
     private JButton[][] buttons;
-    
+    private final JPanel panneau = new JPanel(new GridLayout(3, 3));
+
     public InterfaceMorpion() {
         super("Morpion");
-        this.setBounds(100, 100, 250, 200);
+        this.setBounds(100, 100, 250, 250);
         
         buttons = new JButton[3][3];
         morpion = new Morpion();
@@ -21,6 +22,7 @@ public class InterfaceMorpion extends JFrame {
                 buttons[i][j] = new JButton();
                 buttons[i][j].setFont(new Font("Arial", Font.PLAIN, 40));
                 buttons[i][j].setFocusPainted(false);
+        
                 final int row = i;
                 final int col = j;
 
@@ -37,7 +39,10 @@ public class InterfaceMorpion extends JFrame {
     
     
     private void onButtonClick(int row, int col) {
+                     System.out.println("test");
+
         if (morpion.makeMove(row, col)) {
+
             updateUI();
             int result = morpion.whoFinished();
             if (result == 1) {
@@ -69,7 +74,5 @@ public class InterfaceMorpion extends JFrame {
         updateUI();
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(InterfaceMorpion::new);
-    }
+
 }

@@ -11,7 +11,7 @@ package MorpionJava;
 public class Morpion {
     private char[][] board; // 2D array for the game board
     private char currentPlayer; // 'X' or 'O'
-    private static final int SIZE = 3; // Assuming a 3x3 board
+    public static final int SIZE = 3; // Assuming a 3x3 board
 
     public Morpion() {
         board = new char[SIZE][SIZE];
@@ -30,118 +30,54 @@ public class Morpion {
 
     // Marks the specified cell with the current player's symbol
     public boolean makeMove(int row, int col) {
-        if (row < SIZE ||col > SIZE)
+        if ((row < SIZE && col < SIZE) && board[row][col] == ' ')
         {
-            return false;
+             board[row][col] = currentPlayer;
+             return true;
         }
         // Implementation to make a move
-        board[row][col] = currentPlayer;
+       
         return false;
     }
 
-    // Checks if the game is finished
     public int whoFinished() {
-        // I-1 : game continues, 1 player 1 won, 2 player 2 won, 3 draw
-        
-        //check rows
-         for (int r = 0; r < this.board.length; r++)
-         {
-           boolean win = true;
-           char player_symbol = this.board[r][0];
-           for (int c = 1; c < this.board[r].length; c++)
-           {
-                if (board[r][c] != player_symbol)
-                {
-                   win = false;
-                   break;
-                }
-           }
-           if (win)
-           {
-               if (player_symbol == 'X')
-               {
-                    return 1;
-               }
-               else {
-                   return 0;
-               }
-           }    
-         }
-        
-         //check cols
-        for (int c = 1; c < this.board[0].length; c++)
-        {
-           boolean win = true;
-           char player_symbol = this.board[0][c];
-           for (int r = 0; r < this.board.length; r++)
-           {
-                if (board[r][c] != player_symbol)
-                {
-                   win = false;
-                   break;
-                }
-           }
-           if (win)
-           {
-               if (player_symbol == 'X')
-               {
-                    return 1;
-               }
-               else {
-                   return 0;
-               }
-           }    
-         }
-         
-  
-        //check cols
-        for (int d = 1; d < this.board[0].length; d++)
-        {
-           boolean win_diag1 = true;
-           boolean win_diag2 = true;
+      // -1: game continues, 1: player 1 ('X') won, 2: player 2 ('O') won, 3: draw
 
-           char player_symbol_diag1 = this.board[0][0];
-           char player_symbol_diag2 = this.board[SIZE-1][SIZE-1];
-           {
-                if (board[d][d] != player_symbol_diag1)
-                {
-                   win_diag1 = false;
-                   break;
-                }
-                 if (board[d-1][SIZE-d-1] != player_symbol_diag2)
-                {
-                   win_diag2 = false;
-                   break;
-                }
-           }
-           if (win_diag1)
-           {
-               if (player_symbol_diag1 == 'X')
-               {
-                    return 1;
-               }
-               else {
-                   return 0;
-               }
-           }    
-           if (win_diag2)
-           {
-               if (player_symbol_diag2 == 'X')
-               {
-                    return 1;
-               }
-               else {
-                   return 0;
-               }
-           }    
-         }
-        
-        if (isBoardFull())
-        {
-            return 3;
-        }
-        return -1;
-    }
+      // Check rows
+      for (int r = 0; r < SIZE; r++) {
+          if (board[r][0] != ' ' && checkRowCol(board[r][0], board[r][1], board[r][2])) {
+              return board[r][0] == 'X' ? 1 : 2;
+          }
+      }
+
+      // Check columns
+      for (int c = 0; c < SIZE; c++) {
+          if (board[0][c] != ' ' && checkRowCol(board[0][c], board[1][c], board[2][c])) {
+              return board[0][c] == 'X' ? 1 : 2;
+          }
+      }
+
+      // Check diagonals
+      if (board[0][0] != ' ' && checkRowCol(board[0][0], board[1][1], board[2][2])) {
+          return board[0][0] == 'X' ? 1 : 2;
+      }
+      if (board[0][2] != ' ' && checkRowCol(board[0][2], board[1][1], board[2][0])) {
+          return board[0][2] == 'X' ? 1 : 2;
+      }
+
+      // Check for draw
+      if (isBoardFull()) {
+          return 3;
+      }
+
+      // Game continues
+      return -1;
+  }
+
+  // Helper method to check if three cells are the same
+  private boolean checkRowCol(char c1, char c2, char c3) {
+      return ((c1 != ' ') && (c1 == c2) && (c2 == c3));
+  }
 
 
     // Checks if the board is full
@@ -159,7 +95,7 @@ public class Morpion {
     }
 
     // Switches the current player
-    private void switchPlayer() {
+    public void switchPlayer() {
         // Implementation to switch the current player
         if (currentPlayer == 'X')
         {

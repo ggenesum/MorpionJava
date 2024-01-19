@@ -4,6 +4,8 @@
  */
 package MorpionJava;
 
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author lesei
@@ -15,6 +17,8 @@ public class MorpionApp {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+         SwingUtilities.invokeLater(InterfaceMorpion::new);
+
     }
     
 }
